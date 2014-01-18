@@ -16,6 +16,7 @@ public class MainMenu : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		// TODO use a GUI element instead of 3D collision detection
         ray = Camera.main.ScreenPointToRay(GetInputPosition());
 		hit = Physics2D.GetRayIntersection(ray, Mathf.Infinity);
 	
@@ -24,27 +25,47 @@ public class MainMenu : MonoBehaviour {
 			switch (gameState) {
 		    	case (GameState.MainMenu):
 		    		if (hit.transform.name == "Play") {
+						Debug.Log("Playing");
                 		StartCoroutine(PlayPressed(hit.transform));
 					} 
-				break;
+					break;
 				case (GameState.Paused):
 					if (hit.transform.name == "backButton") {
+						Debug.Log("Backing");
 						StartCoroutine(BackPressed(hit.transform));
 					}
 					break;
 				case (GameState.Playing):
-					//
 					Debug.Log("Game on!!");
 					break;
 			}
 		}
+
+		// This also fires for Android's back button.
+		// http://answers.unity3d.com/questions/369198/how-to-exit-application-in-android-on-back-button.html
+		if (Input.GetKeyDown(KeyCode.Escape)) {
+			Application.Quit(); 
+		}
+	}
+
+	public void QuitToTitle() {
+		Debug.Log("Quit game");
+		gameState = GameState.MainMenu;
+		gameBoard.SetActive(false);
+		main.SetActive(true);
 	}
 	
-    //Called when the play button is pressed
+	//Called when the play button is pressed
     IEnumerator PlayPressed(Transform button)
-    {
-        StartCoroutine(Animate(button, 0.1f, 0.2f));
-        yield return new WaitForSeconds(0.3f);
+	{
+		StartCoroutine(Animate(button, 0.1f, 0.2f));
+		yield return new WaitForSeconds(0.3f);
+		// Reset all fruits
+		foreach (Transform t in gameBoard.transform) {
+			if (t.tag == "SpawnPoint") {
+				t.GetComponent<SpawnScript>().Restart();
+			}
+		}
 		gameState = GameState.Playing;
         main.SetActive(false);
 		gameBoard.SetActive(true);
@@ -55,6 +76,7 @@ public class MainMenu : MonoBehaviour {
 	{
 		StartCoroutine(Animate(button, 0.1f, 0.2f));
 		yield return new WaitForSeconds(0.3f);
+		gameState = GameState.MainMenu;
 		gameBoard.SetActive(false);
 		main.SetActive(true);
 	}

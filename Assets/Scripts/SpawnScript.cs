@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 // This script generates the game pieces and detects matches (from input) 
 
@@ -8,7 +9,7 @@ public class SpawnScript : MonoBehaviour {
 	public Vector3 Size;
 	public int SpawnCount;
 	public float SpawnDelay;
-	
+
 	private Transform SpawnPoint; 
 	private Transform Floor; 
 	public AudioClip match;
@@ -21,13 +22,31 @@ public class SpawnScript : MonoBehaviour {
 	// This should be the exact value of the Collision2D.Size.Y of the prefab fruits
 	private const float sizeY = 1.5f;
 
+	private HashSet<string> fruitTags;
+
 	// Called at the startup of the app
 	void Start() {
-		SpawnFruit();
+		if (fruitTags == null) {
+			fruitTags = new HashSet<string>();
+			foreach (Transform fruit in FruitPrefabList) {
+				fruitTags.Add(fruit.tag);
+			}
+		}
+
 		SpawnPoint = GameObject.Find("SpawnPoint").transform;
 		Floor = GameObject.Find("Floor").transform;
 		StartCoroutine("SpawnEvent");
-	}	
+	}
+
+	public void Restart() {
+		ClearBoard();
+		SpawnFruit();
+	}
+	public void ClearBoard() {
+		foreach (Transform fruit in IterateFruit()) {
+			DestroyObject(fruit.gameObject);
+		}
+	}
 	void SpawnFruit() {
 		// 2D array (effectively) - i used to have a specific array defined, which we may have to bring back
 		for (int x=0; x<Size.x; x++) {
@@ -89,6 +108,17 @@ public class SpawnScript : MonoBehaviour {
 		return ret;
 	}
 
+	bool IsFruit(Transform thing) {
+		return fruitTags.Contains(thing.tag);
+	}
+	IEnumerable<Transform> IterateFruit() {
+		foreach (Transform child in transform) {
+			if (IsFruit(child)) {
+				yield return child;
+			}
+		}
+	}
+
 	void FixedUpdate() {
 		// Hack to stop horizontal drift of fruits. 
 		// We should really put them all in a 2d array and update the array as we go, 
@@ -117,7 +147,7 @@ public class SpawnScript : MonoBehaviour {
 
 				var x = FindFruitColumn(hit.transform.position.x);
 				var y = FindFruitRow(hit.transform.position.y);
-				Debug.Log (string.Format ("grid: {0},{1} tag: {2}", x, y, hit.transform.tag));
+				Debug.Log(string.Format("grid: {0},{1} tag: {2}", x, y, hit.transform.tag));
 
 				// Grab the attached component
 				// hit is the actual gameobject that was clicked in gameplay
