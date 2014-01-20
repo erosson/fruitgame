@@ -14,7 +14,8 @@ public class Pause : MonoBehaviour {
 	// http://docs.unity3d.com/Documentation/Components/GUIScriptingGuide.html
 	void OnGUI() {
 		// http://answers.unity3d.com/questions/46158/how-to-create-a-transparent-button.html
-		Rect buttonRect = new Rect(0, 0, 50, 50);
+		Rect buttonRect = new Rect(0, 0, Screen.width * 0.07f, Screen.width * 0.07f);
+		GUI.skin.button.fontSize = 48;
 		// currently paused, hits the unpause button
 		if (state == State.Paused) {
 			GUI.backgroundColor = Color.clear;
@@ -22,10 +23,15 @@ public class Pause : MonoBehaviour {
 				Unpause();
 			}
 			GUI.backgroundColor = Color.black;
-			var width=100;
-			var height=80;
-			GUI.Window(0, new Rect((Screen.width - width)/2, (Screen.height - height)/2, width, height), PauseWindow,
-			           "Paused");
+			GUILayout.BeginArea(new Rect(Screen.width * 0.3f, Screen.height * 0.3f, Screen.width * 0.4f, Screen.height * 0.4f));
+			if (GUILayout.Button("Unpause")) {
+				Unpause();
+			}
+			if (GUILayout.Button("Quit to Title")) {
+				state = State.QuitDialog;
+				audio.PlayOneShot(unpauseSound);
+			}
+			GUILayout.EndArea();
 		}
 		// currently unpaused, hits the pause button
 		else if (state == State.Unpaused) {
@@ -36,31 +42,18 @@ public class Pause : MonoBehaviour {
 		}
 		else if (state == State.QuitDialog) {
 			// http://docs.unity3d.com/Documentation/ScriptReference/GUI.Window.html
-			var width=160;
-			var height=80;
 			GUI.backgroundColor = Color.black;
-			GUI.ModalWindow(0, new Rect((Screen.width - width)/2, (Screen.height - height)/2, width, height), QuitWindow,
-			                "Quit and return to title?");
+			GUILayout.BeginArea(new Rect(Screen.width * 0.3f, Screen.height * 0.3f, Screen.width * 0.4f, Screen.height * 0.4f));
+			if (GUILayout.Button("Oops, Don't Quit")) {
+					state = State.Paused;
+				audio.PlayOneShot(unpauseSound);
+			}
+			if (GUILayout.Button("Really Quit")) {
+				QuitToTitle();
+			}
+			GUILayout.EndArea();
 		}
 		// else assert false
-	}
-	private void QuitWindow(int windowID) {
-		if (GUI.Button(new Rect(10, 20, 140, 20), "Don't Quit")) {
-			state = State.Paused;
-			audio.PlayOneShot(unpauseSound);
-		}
-		if (GUI.Button(new Rect(10, 50, 140, 20), "Quit")) {
-			QuitToTitle();
-		}
-	}
-	private void PauseWindow(int windowID) {
-		if (GUI.Button(new Rect(10, 20, 80, 20), "Resume")) {
-			Unpause();
-		}
-		if (GUI.Button(new Rect(10, 50, 80, 20), "Quit")) {
-			state = State.QuitDialog;
-			audio.PlayOneShot(unpauseSound);
-		}
 	}
 
 	// "member names cannot be the same as their enclosing type." wtf, C#?
