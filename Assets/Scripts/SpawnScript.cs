@@ -35,12 +35,12 @@ public class SpawnScript : MonoBehaviour {
 
 		SpawnPoint = GameObject.Find("SpawnPoint").transform;
 		Floor = GameObject.Find("Floor").transform;
-		StartCoroutine("SpawnEvent");
 	}
 
 	public void Restart() {
 		ClearBoard();
 		SpawnFruit();
+		StartCoroutine(SpawnEvent());
 	}
 	public void ClearBoard() {
 		foreach (Transform fruit in IterateFruit()) {

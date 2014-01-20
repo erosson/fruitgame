@@ -60,16 +60,16 @@ public class MainMenu : MonoBehaviour {
 	{
 		StartCoroutine(Animate(button, 0.1f, 0.2f));
 		yield return new WaitForSeconds(0.3f);
+		gameState = GameState.Playing;
+        main.SetActive(false);
+		gameBoard.SetActive(true);
 		// Reset all fruits
 		foreach (Transform t in gameBoard.transform) {
 			if (t.tag == "SpawnPoint") {
 				t.GetComponent<SpawnScript>().Restart();
 			}
 		}
-		gameState = GameState.Playing;
-        main.SetActive(false);
-		gameBoard.SetActive(true);
-    }
+	}
 
 	//Called when the back button is pressed
 	IEnumerator BackPressed(Transform button)
