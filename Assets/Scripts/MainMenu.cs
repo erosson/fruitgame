@@ -67,6 +67,7 @@ public class MainMenu : MonoBehaviour {
 		foreach (Transform t in gameBoard.transform) {
 			if (t.tag == "SpawnPoint") {
 				t.GetComponent<SpawnScript>().Restart();
+				break;
 			}
 		}
 	}

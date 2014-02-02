@@ -10,9 +10,11 @@ using System.Collections.Generic;
 public class CellScript : MonoBehaviour {
 	public Transform CollectParticlesPrefab;
 	
+	private GameObject SpawnPoint;
+	
 	// Use this for initialization
 	void Start () {
-	
+		SpawnPoint = GameObject.Find("SpawnPoint");
 	}
 	// Update is called once per frame
 	void Update () {
@@ -46,7 +48,7 @@ public class CellScript : MonoBehaviour {
 				for (int dy = -1; dy <= 1; dy++) {
 					var x2 = x + dx;
 					var y2 = y + dy;
-					if (0 <= x2 && x2 < spawn.Size.x && 0 <= y2 && y2 < spawn.Size.y) {
+					if (0 <= x2 && x2 < spawn.BoardSize.x && 0 <= y2 && y2 < spawn.BoardSize.y) {
 						var candidate = grid[x2, y2];
 						if (candidate) {
 							tags.Add (candidate.tag);
@@ -73,6 +75,8 @@ public class CellScript : MonoBehaviour {
 			if (CollectParticlesPrefab) {
 				Instantiate(CollectParticlesPrefab, death.transform.position, Quaternion.identity);
 			}
+			Debug.Log("Matched: " + death.transform.position.x);
+			SpawnPoint.GetComponent<SpawnScript>().ReSpawnFruit(death.transform.position.x);
 			DestroyObject(death.gameObject);
 		}
 	}

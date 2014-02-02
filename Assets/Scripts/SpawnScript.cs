@@ -6,11 +6,11 @@ using System.Collections.Generic;
 
 public class SpawnScript : MonoBehaviour {
 	public Transform[] FruitPrefabList;  
-	public Vector3 Size;
+	public Vector3 BoardSize;
 	public int SpawnCount;
 	public float SpawnDelay;
 
-	private Transform SpawnPoint; 
+	//private Transform SpawnPoint; 
 	private Transform Floor; 
 	public AudioClip match;
 	public AudioClip noMatch;
@@ -33,25 +33,26 @@ public class SpawnScript : MonoBehaviour {
 			}
 		}
 
-		SpawnPoint = GameObject.Find("SpawnPoint").transform;
+		//SpawnPoint = GameObject.Find("SpawnPoint").transform;
 		Floor = GameObject.Find("Floor").transform;
 	}
 
 	public void Restart() {
 		ClearBoard();
-		SpawnFruit();
-		StartCoroutine(SpawnEvent());
+		SpawnFruitStartup();
+		// StartCoroutine(SpawnEvent());
 	}
 	public void ClearBoard() {
 		foreach (Transform fruit in IterateFruit()) {
 			DestroyObject(fruit.gameObject);
 		}
 	}
-	void SpawnFruit() {
+	void SpawnFruitStartup() {
 		// 2D array (effectively) - i used to have a specific array defined, which we may have to bring back
-		for (int x=0; x<Size.x; x++) {
-			for (int y=0; y<Size.y; y++) {
+		for (int x=0; x<BoardSize.x; x++) {
+			for (int y=0; y<BoardSize.y; y++) {
 				// this is the phsycial spawn point in game, relative to the SpawnPoint object
+				Debug.Log(" Startup tpx: " + transform.position.x + " SpawnOffsetX: " + spawnOffsetX + " x: " + x + " sizex: " + sizeX);
 				Vector3 spawnVector3 = new Vector3(transform.position.x + x * sizeX + spawnOffsetX,transform.position.y + y - 10, 0);
 				// Actual gamepiece 
 				Transform newCell;
@@ -61,30 +62,39 @@ public class SpawnScript : MonoBehaviour {
 			}
 		}
 	}	
+	public void ReSpawnFruit(float spawnPosition) {
+		Debug.Log("ReSpwaning Fruit");
+		Vector3 reSpawnVector3 = new Vector3(spawnPosition, transform.position.y, 0);
+		Transform newCell;
+		newCell = (Transform)Instantiate(FruitPrefabList[Random.Range (0, FruitPrefabList.Length)], reSpawnVector3, Quaternion.identity);
+		newCell.parent = transform;
+	}
+
+	/*
     private IEnumerator SpawnEvent() {
 		while (true) { 
 			yield return new WaitForSeconds(SpawnDelay);
-			// Calculate a full grid amount of fruit, plus one extra row
-			int tooManyFruit = (int)Size.x * (int)Size.y + (int)Size.y;
+			// Calculate a full grid amount of fruit 
+			int tooManyFruit = (int)BoardSize.x * (int)BoardSize.y * 2;
 			if (SpawnPoint.childCount >= tooManyFruit) {
-				continue;
+					continue;
 			}
-			int position = Random.Range (0, (int)Size.y);
+			int position = Random.Range (0, (int)BoardSize.y);
 			for (int i=0; i<SpawnCount; i++) {
-				int x_spawn = Random.Range(0, (int)Size.x);
+				int x_spawn = Random.Range(0, (int)BoardSize.x);
 				Vector3 spawnVector3 = new Vector3(transform.position.x + spawnOffsetX + x_spawn * sizeX, transform.position.y + position, 0);
 				Transform newCell;
 	 			newCell = (Transform)Instantiate(FruitPrefabList[Random.Range (0, FruitPrefabList.Length)], spawnVector3, Quaternion.identity);
 				newCell.parent = transform;
 			}
 		}	
-	}
+	} */
 
 	// Publish an event when blocks are matched.
 	// http://www.codeproject.com/Articles/11541/The-Simplest-C-Events-Example-Imaginable
 	public event MatchHandler Match;
 	public delegate void MatchHandler(int removed);
-
+	
 	public int FindFruitColumn(float x) {
 		return Mathf.RoundToInt((x - transform.position.x - spawnOffsetX) / sizeX);
 	}
@@ -96,12 +106,12 @@ public class SpawnScript : MonoBehaviour {
 	}
 
 	public Transform[,] BuildMatcherGrid() {
-		Transform[,] ret = new Transform[(int)Size.x, (int)Size.y];
+		Transform[,] ret = new Transform[(int)BoardSize.x, (int)BoardSize.y];
 		foreach (Transform fruit in transform) {
 			var x = FindFruitColumn(fruit.position.x);
 			var y = FindFruitRow(fruit.position.y);
 			// This may be false for non-fruit, say, the floor
-			if (0 <= x && x < Size.x && 0 <= y && y < Size.y) {
+			if (0 <= x && x < BoardSize.x && 0 <= y && y < BoardSize.y) {
 				ret[x, y] = fruit;
 			}
 		}
@@ -140,7 +150,7 @@ public class SpawnScript : MonoBehaviour {
 			
 			if (hit.collider != null) {
 				Debug.Log("RayCast2D: " + hit.transform.tag);
-				if (hit.transform.tag == "Floor") {
+				if (hit.transform.tag == "floor") {
 					Debug.Log("Hit the floor");
 					return;	
 				}
