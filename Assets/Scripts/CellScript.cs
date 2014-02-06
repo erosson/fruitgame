@@ -28,14 +28,14 @@ public class CellScript : MonoBehaviour {
 	void OnCollisionExit2D(Collision2D collision) { 
 	}
 
-	// Returns a list of all fruits matching this one.
-	private List<Transform> FindMatches() {
+	// Returns an unordered set of all fruits matching this one. Each match is included only once.
+	private HashSet<Transform> FindMatches() {
 		var spawn = transform.parent.GetComponent<SpawnScript>();
 		var grid = spawn.BuildMatcherGrid();
 		var tags  = new List<string>();
 		
 		// iterate the array vertically, horizontally, and diagonally looking for matches.
-		var matched = new List<Transform>();
+		var matched = new HashSet<Transform>();
 		var matchChecks = new Stack<Transform>();
 		matchChecks.Push(transform);
 		while (matchChecks.Count != 0) {
