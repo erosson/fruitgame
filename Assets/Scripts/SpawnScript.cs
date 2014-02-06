@@ -64,31 +64,12 @@ public class SpawnScript : MonoBehaviour {
 	}	
 	public void ReSpawnFruit(float spawnPosition) {
 		Debug.Log("ReSpwaning Fruit");
-		Vector3 reSpawnVector3 = new Vector3(spawnPosition, transform.position.y, 0);
+		// Y offset prevents most overlap weirdness from pushing things horizontally
+		Vector3 reSpawnVector3 = new Vector3(spawnPosition, transform.position.y + Random.Range(0f, 10f), 0);
 		Transform newCell;
 		newCell = (Transform)Instantiate(FruitPrefabList[Random.Range (0, FruitPrefabList.Length)], reSpawnVector3, Quaternion.identity);
 		newCell.parent = transform;
 	}
-
-	/*
-    private IEnumerator SpawnEvent() {
-		while (true) { 
-			yield return new WaitForSeconds(SpawnDelay);
-			// Calculate a full grid amount of fruit 
-			int tooManyFruit = (int)BoardSize.x * (int)BoardSize.y * 2;
-			if (SpawnPoint.childCount >= tooManyFruit) {
-					continue;
-			}
-			int position = Random.Range (0, (int)BoardSize.y);
-			for (int i=0; i<SpawnCount; i++) {
-				int x_spawn = Random.Range(0, (int)BoardSize.x);
-				Vector3 spawnVector3 = new Vector3(transform.position.x + spawnOffsetX + x_spawn * sizeX, transform.position.y + position, 0);
-				Transform newCell;
-	 			newCell = (Transform)Instantiate(FruitPrefabList[Random.Range (0, FruitPrefabList.Length)], spawnVector3, Quaternion.identity);
-				newCell.parent = transform;
-			}
-		}	
-	} */
 
 	// Publish an event when blocks are matched.
 	// http://www.codeproject.com/Articles/11541/The-Simplest-C-Events-Example-Imaginable
@@ -115,6 +96,7 @@ public class SpawnScript : MonoBehaviour {
 				ret[x, y] = fruit;
 			}
 		}
+		Debug.Log(ret.Length + " fruits on the board");
 		return ret;
 	}
 
