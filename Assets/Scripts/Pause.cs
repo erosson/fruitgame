@@ -6,6 +6,7 @@ public class Pause : MonoBehaviour {
 	public Texture2D unpauseIcon;
 	public AudioClip pauseSound;
 	public AudioClip unpauseSound;
+	public AudioClip gameOverSound;
 	public GameObject mainMenu;
 
 	private enum State {Unpaused, Paused, QuitDialog, GameOver};
@@ -36,6 +37,7 @@ public class Pause : MonoBehaviour {
 				GUI.backgroundColor = GUI.color = Color.red;
 				if (GUILayout.Button("Force Game Over")) {
 					state = State.GameOver;
+					audio.PlayOneShot(gameOverSound);
 				}
 			}
 			GUILayout.EndArea();
