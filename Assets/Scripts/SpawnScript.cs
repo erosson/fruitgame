@@ -24,6 +24,14 @@ public class SpawnScript : MonoBehaviour {
 
 	private HashSet<string> fruitTags;
 
+	// Publish an event when blocks are matched.
+	// http://www.codeproject.com/Articles/11541/The-Simplest-C-Events-Example-Imaginable
+	public event MatchHandler MatchEvent;
+	public delegate void MatchHandler(int removed);
+
+	public event RestartHandler RestartEvent;
+	public delegate void RestartHandler();
+
 	// Called at the startup of the app
 	void Start() {
 		if (fruitTags == null) {
@@ -40,6 +48,7 @@ public class SpawnScript : MonoBehaviour {
 	public void Restart() {
 		ClearBoard();
 		SpawnFruitStartup();
+		RestartEvent();
 		// StartCoroutine(SpawnEvent());
 	}
 	public void ClearBoard() {
@@ -71,11 +80,6 @@ public class SpawnScript : MonoBehaviour {
 		newCell.parent = transform;
 	}
 
-	// Publish an event when blocks are matched.
-	// http://www.codeproject.com/Articles/11541/The-Simplest-C-Events-Example-Imaginable
-	public event MatchHandler Match;
-	public delegate void MatchHandler(int removed);
-	
 	public int FindFruitColumn(float x) {
 		return Mathf.RoundToInt((x - transform.position.x - spawnOffsetX) / sizeX);
 	}
@@ -150,7 +154,7 @@ public class SpawnScript : MonoBehaviour {
 					audio.PlayOneShot(match);
 					cScript.DestroyMatches();
 					// Publish an event when blocks are matched.
-					Match(matched);
+					MatchEvent(matched);
 				} 
 				else {
 					audio.PlayOneShot(noMatch);

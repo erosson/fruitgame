@@ -9,12 +9,18 @@ public class Score : MonoBehaviour {
 		score = 0;
 		// Listen for matched blocks.
 		// http://docs.unity3d.com/412/Documentation/ScriptReference/index.Accessing_Other_Components.html
-		GetComponent<SpawnScript>().Match += OnMatch;
+		var spawn = GetComponent<SpawnScript>();
+		spawn.MatchEvent += OnMatch;
+		spawn.RestartEvent += OnRestart;
 	}
 
 	private void OnMatch(int removed) {
 		int scoreDelta = (removed - 1) * 100;
 		score += scoreDelta;
+	}
+
+	private void OnRestart() {
+		score = 0;
 	}
 
 	public void OnGUI() {
