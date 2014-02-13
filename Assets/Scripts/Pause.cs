@@ -8,14 +8,15 @@ public class Pause : MonoBehaviour {
 	public AudioClip unpauseSound;
 	public GameObject mainMenu;
 
-	private enum State {Unpaused, Paused, QuitDialog};
+	private enum State {Unpaused, Paused, QuitDialog, GameOver};
 	private State state = State.Unpaused;
-	
+
 	// http://docs.unity3d.com/Documentation/Components/GUIScriptingGuide.html
 	void OnGUI() {
 		// http://answers.unity3d.com/questions/46158/how-to-create-a-transparent-button.html
 		Rect buttonRect = new Rect(0, 0, Screen.width * 0.07f, Screen.width * 0.07f);
 		GUI.skin.button.fontSize = 48;
+		GUI.skin.label.fontSize = 48;
 		// currently paused, hits the unpause button
 		if (state == State.Paused) {
 			GUI.backgroundColor = Color.clear;
@@ -31,6 +32,12 @@ public class Pause : MonoBehaviour {
 				state = State.QuitDialog;
 				audio.PlayOneShot(unpauseSound);
 			}
+			if (Debug.isDebugBuild) {
+				GUI.backgroundColor = GUI.color = Color.red;
+				if (GUILayout.Button("Force Game Over")) {
+					state = State.GameOver;
+				}
+			}
 			GUILayout.EndArea();
 		}
 		// currently unpaused, hits the pause button
@@ -41,11 +48,10 @@ public class Pause : MonoBehaviour {
 			}
 		}
 		else if (state == State.QuitDialog) {
-			// http://docs.unity3d.com/Documentation/ScriptReference/GUI.Window.html
 			GUI.backgroundColor = Color.black;
 			GUILayout.BeginArea(new Rect(Screen.width * 0.3f, Screen.height * 0.3f, Screen.width * 0.4f, Screen.height * 0.4f));
 			if (GUILayout.Button("Oops, Don't Quit")) {
-					state = State.Paused;
+				state = State.Paused;
 				audio.PlayOneShot(unpauseSound);
 			}
 			if (GUILayout.Button("Really Quit")) {
@@ -53,7 +59,22 @@ public class Pause : MonoBehaviour {
 			}
 			GUILayout.EndArea();
 		}
+		else if (state == State.GameOver) {
+			// http://docs.unity3d.com/Documentation/ScriptReference/GUI.Window.html
+			GUI.backgroundColor = Color.black;
+			GUI.skin.window.fontSize = 48;
+			GUILayout.Window(0, new Rect(Screen.width * 0.3f, Screen.height * 0.3f, Screen.width * 0.4f, Screen.height * 0.4f), GameOverWindow, "Game Over!");
+		}
 		// else assert false
+	}
+
+	private void GameOverWindow(int id) {
+		// centered. http://forum.unity3d.com/threads/15455-Center-GUI-Component
+		GUILayout.Label(""); // quick spacing hack
+		GUILayout.Label("Score: " + GetComponent<Score>().formattedScore);
+		if (GUILayout.Button("Return to Title")) {
+			QuitToTitle();
+		}
 	}
 
 	// "member names cannot be the same as their enclosing type." wtf, C#?
@@ -91,6 +112,9 @@ public class Pause : MonoBehaviour {
 				audio.PlayOneShot(unpauseSound);
 			}
 			else if (state == State.QuitDialog) {
+				QuitToTitle();
+			}
+			else if (state == State.GameOver) {
 				QuitToTitle();
 			}
 			// else assert false

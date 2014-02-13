@@ -23,8 +23,13 @@ public class Score : MonoBehaviour {
 		score = 0;
 	}
 
+	public string formattedScore {
+		get {
+			return string.Format("{0:n0}", score);
+		}
+	}
+
 	public void OnGUI() {
-		string scoreWithCommas = string.Format("{0:n0}", score);
-		GUI.Label (new Rect (Screen.width - 100,0,100,50), scoreWithCommas, style);
+		GUI.Label (new Rect (Screen.width - 100,0,100,50), formattedScore, style);
 	}
 }
