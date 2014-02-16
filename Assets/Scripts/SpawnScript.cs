@@ -7,9 +7,7 @@ using System.Collections.Generic;
 public class SpawnScript : MonoBehaviour {
 	public Transform[] FruitPrefabList;  
 	public Vector3 BoardSize;
-	public int SpawnCount;
-	public float SpawnDelay;
-
+	
 	//private Transform SpawnPoint; 
 	private Transform Floor; 
 	public AudioClip match;
