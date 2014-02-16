@@ -26,10 +26,11 @@ public class SpawnScript : MonoBehaviour {
 
 	// Publish an event when blocks are matched.
 	// http://www.codeproject.com/Articles/11541/The-Simplest-C-Events-Example-Imaginable
-	public event MatchHandler MatchEvent;
+	public event MatchHandler MatchEvent = delegate {};
 	public delegate void MatchHandler(int removed);
 
-	public event RestartHandler RestartEvent;
+	// prevent npe on the first restart. http://stackoverflow.com/a/340618
+	public event RestartHandler RestartEvent = delegate {};
 	public delegate void RestartHandler();
 
 	// Called at the startup of the app
