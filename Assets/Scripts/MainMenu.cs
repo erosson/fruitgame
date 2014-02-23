@@ -9,8 +9,8 @@ namespace FrenzyGames.FruitGame {
 		public GameObject gameBoard;				// The gameboard group
 		public AudioClip sfx;
 
-		enum GameState { MainMenu, Playing, Paused };
-		GameState gameState = GameState.MainMenu;
+		public enum GameState { MainMenu, Playing, Paused };
+		public GameState gameState = GameState.MainMenu;
 		
 		Ray ray;
 	    RaycastHit2D hit;                           // The raycast to detect the target item

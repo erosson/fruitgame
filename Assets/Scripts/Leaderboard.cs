@@ -3,7 +3,6 @@ using UnityEngine.SocialPlatforms;
 using UnityEngine.SocialPlatforms.PPrefs;
 using System.Collections;
 
-
 namespace FrenzyGames.FruitGame {
 	public class Leaderboard : MonoBehaviour {
 		// This should match /Assets/Resources/LocalSocialSetting (until we get network highscores)
@@ -63,6 +62,17 @@ namespace FrenzyGames.FruitGame {
 				var rank = i+1;
 				Debug.Log(rank + ": " + score.date + " " + score.formattedValue + "; user " + score.userID); 
 			}
+		}
+
+		public void LoadScores(System.Action<IScore[]> onload) {
+			Social.localUser.Authenticate(success => {
+				if (success) {
+					Social.LoadScores(leaderboardID, onload);
+				}
+				else {
+					Debug.Log ("Failed to authenticate");
+				}
+			});
 		}
 	}
 }
