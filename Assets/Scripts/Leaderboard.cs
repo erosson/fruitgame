@@ -21,13 +21,11 @@ namespace FrenzyGames.FruitGame {
 			Social.Active = PPrefsSocialPlatform.Instance;
 
 			// Log in. http://docs.unity3d.com/Documentation/Components/net-SocialAPI.html
+			// TODO: don't do this right at the start once we get network achievements running. Prompt the user to log in,
+			// because I think localUser.Authenticate() brings up a dialog
 			Social.localUser.Authenticate(success => {
 				if (success) {
-					Debug.Log ("Authenticated, checking achievements");
-					
-					// Request loaded achievements, and register a callback for processing them
-					Social.LoadAchievements(ProcessAchievements);
-					Social.LoadScores(leaderboardID, ProcessScores);
+					Debug.Log ("Authenticated");
 				}
 				else {
 					Debug.Log ("Failed to authenticate");

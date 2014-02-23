@@ -16,6 +16,34 @@ MonoBehaviour:
     title: Test Achievement
     unAchievedDesc: lol
     achievedDesc: lolol
+    hidden: 1
+    points: 10
+    image: {fileID: 2800000, guid: a313495cc6c833240a2c62c231ccd988, type: 3}
+  - id: Finish1
+    title: Finish One Game
+    unAchievedDesc: Finish a game.
+    achievedDesc: 
+    hidden: 0
+    points: 10
+    image: {fileID: 2800000, guid: a313495cc6c833240a2c62c231ccd988, type: 3}
+  - id: Finish10
+    title: Test Achievement
+    unAchievedDesc: lol
+    achievedDesc: lolol
+    hidden: 0
+    points: 10
+    image: {fileID: 2800000, guid: a313495cc6c833240a2c62c231ccd988, type: 3}
+  - id: TestCheevo0
+    title: Test Achievement
+    unAchievedDesc: lol
+    achievedDesc: lolol
+    hidden: 0
+    points: 10
+    image: {fileID: 2800000, guid: a313495cc6c833240a2c62c231ccd988, type: 3}
+  - id: TestCheevo0
+    title: Test Achievement
+    unAchievedDesc: lol
+    achievedDesc: lolol
     hidden: 0
     points: 10
     image: {fileID: 2800000, guid: a313495cc6c833240a2c62c231ccd988, type: 3}
