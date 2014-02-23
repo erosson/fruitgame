@@ -25,17 +25,18 @@ namespace FrenzyGames.FruitGame {
 				if (achievements == null || achievementDescriptions == null) {
 					return null;
 				}
+				Dictionary<string, IAchievement> cheevsById = new Dictionary<string, IAchievement>();
+				foreach (var cheev in achievements) {
+					cheevsById.Remove(cheev.id);
+					cheevsById.Add(cheev.id, cheev);
+				}
 				var ret = new List<DescribedAchievement>();
-				// Walk through the lists in parallel. They're sorted, and descriptions has at least as many items as achievements
-				var iter = achievements.GetEnumerator();
 				foreach (IAchievementDescription desc in achievementDescriptions) {
-					if (iter.Current != null && iter.Current.id == desc.id) {
-						ret.Add(new DescribedAchievement(desc, iter.Current));
-						iter.MoveNext();
+					IAchievement cheev = null;
+					if (cheevsById.ContainsKey(desc.id)) {
+						cheev = cheevsById[desc.id];
 					}
-					else {
-						ret.Add(new DescribedAchievement(desc, null));
-					}
+					ret.Add(new DescribedAchievement(desc, cheev));
 				}
 				return ret;
 			}
@@ -83,13 +84,20 @@ namespace FrenzyGames.FruitGame {
 						audio.PlayOneShot(sfx);
 						scrollPosition = Vector2.zero;
 						state = State.AchievementsList;
-						Social.LoadAchievements(cheevs => {
-							this.achievements = new List<IAchievement>(cheevs);
-							this.achievements.Sort((a, b) => string.Compare(a.id, b.id));
-						});
-						Social.LoadAchievementDescriptions(cheevs => {
-							this.achievementDescriptions = new List<IAchievementDescription>(cheevs);
-							this.achievementDescriptions.Sort((a, b) => string.Compare(a.id, b.id));
+						Social.localUser.Authenticate(result => {
+							Social.LoadAchievements(cheevs => {
+								Debug.Log ("loaded achieves: " + cheevs.Length);
+								foreach (var cheev in cheevs) {
+									Debug.Log(cheev.id + "; " + cheev.percentCompleted + "; " + cheev.completed);
+								}
+								this.achievements = new List<IAchievement>(cheevs);
+								this.achievements.Sort((a, b) => string.Compare(a.id, b.id));
+							});
+							Social.LoadAchievementDescriptions(cheevs => {
+								Debug.Log ("loaded achievedescs: " + cheevs.Length);
+								this.achievementDescriptions = new List<IAchievementDescription>(cheevs);
+								this.achievementDescriptions.Sort((a, b) => string.Compare(a.id, b.id));
+							});
 						});
 						// hack to break the "play" button while highscore gui is showing
 						Time.timeScale = 0;
@@ -117,17 +125,19 @@ namespace FrenzyGames.FruitGame {
 					}
 					else {
 						foreach (DescribedAchievement cheev in describedAchievements) {
-							GUILayout.BeginHorizontal();
-							GUILayout.Box(cheev.description.image, GUILayout.Width(64), GUILayout.Height (64));
-							//GUILayout.Label(cheev.description.id);
-							GUILayout.Box(cheev.description.title);
-							GUILayout.Box(cheev.currentDescription);
-							//GUILayout.BeginVertical();
-							//GUILayout.Box(cheev.completed ? "Complete" : "Incomplete");
-							GUILayout.Box(cheev.percentCompletedString + " complete" + 
-							              (cheev.lastReportedDate.HasValue ? ", " + cheev.lastReportedDate.Value : ""));
-							//GUILayout.EndVertical();
-							GUILayout.EndHorizontal();
+							if (!cheev.hidden) {
+								GUILayout.BeginHorizontal();
+								GUILayout.Box(cheev.description.image, GUILayout.Width(64), GUILayout.Height (64));
+								//GUILayout.Label(cheev.description.id);
+								GUILayout.Box(cheev.description.title);
+								GUILayout.Box(cheev.currentDescription);
+								//GUILayout.BeginVertical();
+								//GUILayout.Box(cheev.completed ? "Complete" : "Incomplete");
+								GUILayout.Box(cheev.percentCompletedString + " complete" + 
+								              (cheev.lastReportedDate.HasValue ? ", " + cheev.lastReportedDate.Value : ""));
+								//GUILayout.EndVertical();
+								GUILayout.EndHorizontal();
+							}
 						}
 					}
 					GUILayout.EndScrollView();
@@ -194,7 +204,7 @@ namespace FrenzyGames.FruitGame {
 			public string percentCompletedString {
 				get {
 					// http://stackoverflow.com/questions/1790975/format-decimal-for-percentage-values
-					return string.Format("{0:P0}", percentCompleted);
+					return string.Format("{0:P0}", percentCompleted/100);
 				}
 			}
 

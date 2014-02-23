@@ -35,6 +35,28 @@ namespace FrenzyGames.FruitGame {
 			pause.GameOverEvent += OnGameOver;
 		}
 
+		private int PrefsAddInt(string key, int val) {
+			val += PlayerPrefs.GetInt(key);
+			PlayerPrefs.SetInt(key, val);
+			return val;
+		}
+
+		private void ReportProgress(string key, double value) {
+			ReportProgress(key, value, 1);
+		}
+
+		private void ReportProgress(string key, double value, double max) {
+			var percent = 100 * value / max;
+			percent = System.Math.Min(100, percent);
+			// TODO this overwrites the date. Once it's at 100%, don't re-report it!
+			Social.ReportProgress(key, percent, OnAchievementReport);
+		}
+
+		private void OnAchievementReport(bool result) {
+			Debug.Log ("achievement reported "+result+"; "+PPrefsSocialPlatform.Instance._achievements.Count);
+			// TODO error handling
+		}
+
 		private void OnGameOver(Score score) {
 			// Report a high score when the game ends.
 			Social.localUser.Authenticate(success => {
@@ -42,24 +64,16 @@ namespace FrenzyGames.FruitGame {
 					Social.ReportScore(score.score, leaderboardID, result => {
 						// TODO error handling if score failed to save
 					});
+					var finished = PrefsAddInt("GamesFinished", 1);
+					ReportProgress("Finish1", finished, 1);
+					ReportProgress("Finish10", finished, 10);
+					ReportProgress("Finish100", finished, 100);
+					ReportProgress("Finish1000", finished, 1000);
 				}
 				else {
 					Debug.Log ("Failed to authenticate");
 				}
 			});
-		}
-
-		private void ProcessAchievements(IAchievement[] cheevos) {
-			Debug.Log("Achievements loaded: " + cheevos.Length);
-		}
-
-		private void ProcessScores(IScore[] scores) {
-			Debug.Log("Scores loaded: " + scores.Length);
-			for (var i=0; i < scores.Length; i++) {
-				var score = scores[i];
-				var rank = i+1;
-				Debug.Log(rank + ": " + score.date + " " + score.formattedValue + "; user " + score.userID); 
-			}
 		}
 
 		public void LoadScores(System.Action<IScore[]> onload) {
