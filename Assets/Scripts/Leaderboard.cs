@@ -58,8 +58,10 @@ namespace FrenzyGames.FruitGame {
 
 		private void ProcessScores(IScore[] scores) {
 			Debug.Log("Scores loaded: " + scores.Length);
-			foreach (var score in scores) {
-				Debug.Log(score.date + ": " + score.formattedValue + "; user " + score.userID); 
+			for (var i=0; i < scores.Length; i++) {
+				var score = scores[i];
+				var rank = i+1;
+				Debug.Log(rank + ": " + score.date + " " + score.formattedValue + "; user " + score.userID); 
 			}
 		}
 	}
