@@ -15,6 +15,9 @@ namespace FrenzyGames.FruitGame {
 		private enum State {Unpaused, Paused, QuitDialog, GameOver};
 		private State state = State.Unpaused;
 
+		public event GameOverHandler GameOverEvent = delegate {};
+		public delegate void GameOverHandler(Score score);
+
 		// http://docs.unity3d.com/Documentation/Components/GUIScriptingGuide.html
 		void OnGUI() {
 			// http://answers.unity3d.com/questions/46158/how-to-create-a-transparent-button.html
@@ -40,6 +43,8 @@ namespace FrenzyGames.FruitGame {
 					GUI.backgroundColor = GUI.color = Color.red;
 					if (GUILayout.Button("Force Game Over")) {
 						state = State.GameOver;
+						// TODO inspector score reference
+						GameOverEvent(GetComponent<Score>());
 						audio.PlayOneShot(gameOverSound);
 					}
 				}
