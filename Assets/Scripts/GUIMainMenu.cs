@@ -72,6 +72,16 @@ namespace FrenzyGames.FruitGame {
 				return string.Join("\n", ret.ToArray());
 			}
 		}
+
+		
+		void Update() {
+			// This also fires for Android's back button.
+			if (Input.GetKeyDown(KeyCode.Escape)) {
+				if (state == State.HighScoreList || state == State.AchievementsList) {
+					BackToMain();
+				}
+			}
+		}
 		
 		public void OnGUI() {
 			// Never ever display any of this if the MainMenu, where state is currently tracked, thinks we're in the middle of the game.
@@ -94,7 +104,6 @@ namespace FrenzyGames.FruitGame {
 						state = State.AchievementsList;
 						Social.localUser.Authenticate(result => {
 							Social.LoadAchievements(cheevs => {
-								Debug.Log ("loaded achieves: " + cheevs.Length);
 								foreach (var cheev in cheevs) {
 									Debug.Log(cheev.id + "; " + cheev.percentCompleted + "; " + cheev.completed);
 								}
@@ -102,7 +111,6 @@ namespace FrenzyGames.FruitGame {
 								this.achievements.Sort((a, b) => string.Compare(a.id, b.id));
 							});
 							Social.LoadAchievementDescriptions(cheevs => {
-								Debug.Log ("loaded achievedescs: " + cheevs.Length);
 								this.achievementDescriptions = new List<IAchievementDescription>(cheevs);
 								this.achievementDescriptions.Sort((a, b) => string.Compare(a.id, b.id));
 							});
@@ -118,10 +126,7 @@ namespace FrenzyGames.FruitGame {
 					GUILayout.Box(HighScoreText);
 					GUILayout.EndScrollView();
 					if (GUILayout.Button("Exit")) {
-						audio.PlayOneShot(sfx);
-						state = State.Main;
-						// hack to break the "play" button while highscore gui is showing
-						Time.timeScale = 1;
+						BackToMain();
 					}
 				}
 				else if (state == State.AchievementsList) {
@@ -150,15 +155,19 @@ namespace FrenzyGames.FruitGame {
 					}
 					GUILayout.EndScrollView();
 					if (GUILayout.Button("Exit")) {
-						audio.PlayOneShot(sfx);
-						state = State.Main;
-						// hack to break the "play" button while achievements gui is showing
-						Time.timeScale = 1;
+						BackToMain();
 					}
 				}
 			}
 		}
 
+		private void BackToMain() {
+			audio.PlayOneShot(sfx);
+			state = State.Main;
+			// hack to break the "play" button while achievements gui is showing
+			Time.timeScale = 1;
+		}
+		
 		private void OnRestart() {
 			state = State.Main;
 		}
