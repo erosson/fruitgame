@@ -13,13 +13,13 @@ namespace FrenzyGames.FruitGame {
 		public string leaderboardID;
 		public Pause pause;
 		public GameObject achievementPopupPrefab;
-
-		private Dictionary<string, IAchievementDescription> achievementsByID;
+		
+		private Dictionary<string, AchievementData> achievementsByID;
 
 		void Start() {
 			// Uncomment to reset local scores for debug builds.
 			if (Debug.isDebugBuild) {
-				//PlayerPrefs.DeleteAll();
+				PlayerPrefs.DeleteAll();
 			}
 
 			// Local achievements and leaderboards. TODO: use ios gamecenter, android googleplay, ...
@@ -33,11 +33,16 @@ namespace FrenzyGames.FruitGame {
 			Social.localUser.Authenticate(success => {
 				if (success) {
 					Social.LoadAchievementDescriptions(descs => {
-						achievementsByID = new Dictionary<string, IAchievementDescription>();
+						achievementsByID = new Dictionary<string, AchievementData>();
 						foreach (IAchievementDescription desc in descs) {
-							achievementsByID[desc.id] = desc;
+							achievementsByID[desc.id] = new AchievementData(desc, 0);
 						}
 
+						Social.LoadAchievements(achieves => {
+							foreach (IAchievement achieve in achieves) {
+								achievementsByID[achieve.id].percentCompleted = achieve.percentCompleted;
+							}
+						});
 						// Uncomment to test achievement GUI.
 						//OnAchievementReport(achievementsByID["TestCheevo0"], 100.0, true);
 					});
@@ -63,19 +68,22 @@ namespace FrenzyGames.FruitGame {
 		private void ReportProgress(string key, double value, double max) {
 			var percent = 100 * value / max;
 			percent = System.Math.Min(100, percent);
-			// TODO this overwrites the date. Once it's at 100%, don't re-report it!
-			var desc = achievementsByID[key];
-			Social.ReportProgress(key, percent, result => {
-				OnAchievementReport(desc, percent, result);
-			});
+			var achieve = achievementsByID[key];
+			// Don't report already-achieved achievements, or lower/unchanged values
+			if (!achieve.completed && percent > achieve.percentCompleted) {
+				Social.ReportProgress(key, percent, result => {
+					OnAchievementReport(achieve, percent, result);
+				});
+			}
 		}
 
-		private void OnAchievementReport(IAchievementDescription desc, double percent, bool result) {
+		private void OnAchievementReport(AchievementData achieve, double percent, bool result) {
 			if (result) {
-				// show popup if the achievement's complete
-				if (percent >= 100) {
+				achieve.percentCompleted = percent;
+				if (achieve.completed) {
+					// show achievement-complete popup
 					var popup = Instantiate(achievementPopupPrefab) as GameObject;
-					popup.GetComponent<AchievementPopup>().achievement = desc;
+					popup.GetComponent<AchievementPopup>().achievement = achieve.description;
 					popup.SetActive(true);
 				}
 			}
@@ -112,6 +120,25 @@ namespace FrenzyGames.FruitGame {
 					Debug.Log ("Failed to authenticate");
 				}
 			});
+		}
+
+		private class AchievementData {
+			public IAchievementDescription description;
+			public double percentCompleted;
+
+			public AchievementData(IAchievementDescription description, double percentCompleted) {
+				this.percentCompleted = percentCompleted;
+				this.description = description;
+			}
+
+			public bool completed {
+				get {
+					return percentCompleted >= 100;
+				}
+				set {
+					percentCompleted = value ? 100 : 0;
+				}
+			}
 		}
 	}
 }
