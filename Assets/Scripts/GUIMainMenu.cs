@@ -70,7 +70,7 @@ namespace FrenzyGames.FruitGame {
 			// TODO: delete MainMenu and maintain this state here, once this becomes the real MainMenu.
 			if (mainMenu.gameState == MainMenu.GameState.MainMenu) {
 				if (state == State.Main) {
-					if (GUI.Button(new Rect(0, Screen.height * (1 - 0.12f), Screen.width * 0.4f, Screen.height * 0.12f), "High Score List")) {
+					if (GUI.Button(new Rect(0, Screen.height * (1 - 0.12f), Screen.width * 0.4f, Screen.height * 0.12f), "High Scores")) {
 						audio.PlayOneShot(sfx);
 						scrollPosition = Vector2.zero;
 						state = State.HighScoreList;
@@ -80,7 +80,7 @@ namespace FrenzyGames.FruitGame {
 						// hack to break the "play" button while highscore gui is showing
 						Time.timeScale = 0;
 					}
-					if (GUI.Button(new Rect(0, Screen.height * (1 - 0.24f), Screen.width * 0.4f, Screen.height * 0.12f), "Achievements List")) {
+					if (GUI.Button(new Rect(0, Screen.height * (1 - 0.24f), Screen.width * 0.4f, Screen.height * 0.12f), "Achievements")) {
 						audio.PlayOneShot(sfx);
 						scrollPosition = Vector2.zero;
 						state = State.AchievementsList;

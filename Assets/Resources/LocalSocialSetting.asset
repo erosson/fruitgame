@@ -43,7 +43,7 @@ MonoBehaviour:
   - id: Finish1000
     title: Finish 1,000
     unAchievedDesc: Complete 1,000 games.
-    achievedDesc: Someone's addicted.
+    achievedDesc: Complete 1,000 games. Someone's addicted.
     hidden: 0
     points: 10
     image: {fileID: 2800000, guid: a313495cc6c833240a2c62c231ccd988, type: 3}
