@@ -16,3 +16,5 @@
 /*.userprefs
 
 /build/
+
+/ProjectSettings/Physics2DSettings.asset
