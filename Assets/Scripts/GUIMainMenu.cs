@@ -27,8 +27,16 @@ namespace FrenzyGames.FruitGame {
 				}
 				Dictionary<string, IAchievement> cheevsById = new Dictionary<string, IAchievement>();
 				foreach (var cheev in achievements) {
-					cheevsById.Remove(cheev.id);
-					cheevsById.Add(cheev.id, cheev);
+					if (cheevsById.ContainsKey(cheev.id)) {
+						// Sometimes there are duplicates; show only the latest one
+						if (cheev.lastReportedDate > cheevsById[cheev.id].lastReportedDate) {
+							cheevsById.Remove(cheev.id);
+							cheevsById.Add(cheev.id, cheev);
+						}
+					}
+					else {
+						cheevsById.Add(cheev.id, cheev);
+					}
 				}
 				var ret = new List<DescribedAchievement>();
 				foreach (IAchievementDescription desc in achievementDescriptions) {
