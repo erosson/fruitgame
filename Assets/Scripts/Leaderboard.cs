@@ -8,6 +8,7 @@ namespace FrenzyGames.FruitGame {
 		// This should match /Assets/Resources/LocalSocialSetting (until we get network highscores)
 		public string leaderboardID;
 		public Pause pause;
+		public GameObject achievementPopupPrefab;
 
 		void Start() {
 			// Uncomment to reset local scores for debug builds.
@@ -29,7 +30,13 @@ namespace FrenzyGames.FruitGame {
 				}
 				else {
 					Debug.Log ("Failed to authenticate");
-				}
+				}/*
+				// Test achievement GUI. Delete me!
+				Social.LoadAchievementDescriptions(descs => {
+					var popup = Instantiate(achievementPopupPrefab) as GameObject;
+					popup.GetComponent<AchievementPopup>().achievement = descs[1];
+					popup.SetActive(true);
+				});*/
 			});
 			
 			pause.GameOverEvent += OnGameOver;
