@@ -13,6 +13,7 @@ namespace FrenzyGames.FruitGame {
 		public string leaderboardID;
 		public Pause pause;
 		public GameObject achievementPopupPrefab;
+		public AudioClip sfx;
 		
 		private Dictionary<string, AchievementData> achievementsByID;
 
@@ -85,6 +86,7 @@ namespace FrenzyGames.FruitGame {
 					var popup = Instantiate(achievementPopupPrefab) as GameObject;
 					popup.GetComponent<AchievementPopup>().achievement = achieve.description;
 					popup.SetActive(true);
+					audio.PlayOneShot(sfx);
 				}
 			}
 			else {
