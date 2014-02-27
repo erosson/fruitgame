@@ -2,13 +2,19 @@
 using UnityEngine.SocialPlatforms;
 using UnityEngine.SocialPlatforms.PPrefs;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace FrenzyGames.FruitGame {
+	/**
+	 * High score lists and achievements.
+	 */
 	public class Leaderboard : MonoBehaviour {
 		// This should match /Assets/Resources/LocalSocialSetting (until we get network highscores)
 		public string leaderboardID;
 		public Pause pause;
 		public GameObject achievementPopupPrefab;
+
+		private Dictionary<string, IAchievementDescription> achievementsByID;
 
 		void Start() {
 			// Uncomment to reset local scores for debug builds.
@@ -26,17 +32,19 @@ namespace FrenzyGames.FruitGame {
 			// because I think localUser.Authenticate() brings up a dialog
 			Social.localUser.Authenticate(success => {
 				if (success) {
-					Debug.Log ("Authenticated");
+					Social.LoadAchievementDescriptions(descs => {
+						achievementsByID = new Dictionary<string, IAchievementDescription>();
+						foreach (IAchievementDescription desc in descs) {
+							achievementsByID[desc.id] = desc;
+						}
+
+						// Uncomment to test achievement GUI.
+						//OnAchievementReport(achievementsByID["TestCheevo0"], 100.0, true);
+					});
 				}
 				else {
 					Debug.Log ("Failed to authenticate");
-				}/*
-				// Test achievement GUI. Delete me!
-				Social.LoadAchievementDescriptions(descs => {
-					var popup = Instantiate(achievementPopupPrefab) as GameObject;
-					popup.GetComponent<AchievementPopup>().achievement = descs[1];
-					popup.SetActive(true);
-				});*/
+				}
 			});
 			
 			pause.GameOverEvent += OnGameOver;
@@ -56,12 +64,24 @@ namespace FrenzyGames.FruitGame {
 			var percent = 100 * value / max;
 			percent = System.Math.Min(100, percent);
 			// TODO this overwrites the date. Once it's at 100%, don't re-report it!
-			Social.ReportProgress(key, percent, OnAchievementReport);
+			var desc = achievementsByID[key];
+			Social.ReportProgress(key, percent, result => {
+				OnAchievementReport(desc, percent, result);
+			});
 		}
 
-		private void OnAchievementReport(bool result) {
-			Debug.Log ("achievement reported "+result+"; "+PPrefsSocialPlatform.Instance._achievements.Count);
-			// TODO error handling
+		private void OnAchievementReport(IAchievementDescription desc, double percent, bool result) {
+			if (result) {
+				// show popup if the achievement's complete
+				if (percent >= 100) {
+					var popup = Instantiate(achievementPopupPrefab) as GameObject;
+					popup.GetComponent<AchievementPopup>().achievement = desc;
+					popup.SetActive(true);
+				}
+			}
+			else {
+				// TODO error handling
+			}
 		}
 
 		private void OnGameOver(Score score) {
