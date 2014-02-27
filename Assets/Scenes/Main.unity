@@ -2741,7 +2741,9 @@ MonoBehaviour:
   pauseSound: {fileID: 8300000, guid: ddffe65c56e2ca14e955c6775a2924ed, type: 3}
   unpauseSound: {fileID: 8300000, guid: ddffe65c56e2ca14e955c6775a2924ed, type: 3}
   gameOverSound: {fileID: 8300000, guid: e03ea7dd3d1ef9946907f10dbedb5d65, type: 3}
-  mainMenu: {fileID: 1570562875}
+  mainMenu: {fileID: 1570562879}
+  spawn: {fileID: 1878350667}
+  score: {fileID: 1878350673}
 --- !u!114 &1878350673
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2955,6 +2957,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   leaderboardID: HighScores
   pause: {fileID: 1878350672}
+  spawn: {fileID: 1878350667}
   achievementPopupPrefab: {fileID: 1936914939}
   sfx: {fileID: 8300000, guid: 9f0d1c21dd2f3ed41bf8af84032702d9, type: 3}
 --- !u!82 &2007129807

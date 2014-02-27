@@ -10,13 +10,12 @@ namespace FrenzyGames.FruitGame {
 		public AudioClip pauseSound;
 		public AudioClip unpauseSound;
 		public AudioClip gameOverSound;
-		public GameObject mainMenu;
+		public MainMenu mainMenu;
+		public SpawnScript spawn;
+		public Score score;
 
 		private enum State {Unpaused, Paused, QuitDialog, GameOver};
 		private State state = State.Unpaused;
-
-		public event GameOverHandler GameOverEvent = delegate {};
-		public delegate void GameOverHandler(Score score);
 
 		// http://docs.unity3d.com/Documentation/Components/GUIScriptingGuide.html
 		void OnGUI() {
@@ -43,9 +42,9 @@ namespace FrenzyGames.FruitGame {
 					GUI.backgroundColor = GUI.color = Color.red;
 					if (GUILayout.Button("Force Game Over")) {
 						state = State.GameOver;
-						// TODO inspector score reference
-						GameOverEvent(GetComponent<Score>());
+						spawn.ForceGameOver(score);
 						audio.PlayOneShot(gameOverSound);
+						Time.timeScale = 1;
 					}
 				}
 				GUILayout.EndArea();
@@ -103,9 +102,8 @@ namespace FrenzyGames.FruitGame {
 		}
 
 		private void QuitToTitle() {
-			// Unpause to restore timescale first, else main menu buttons won't work.
 			Unpause();
-			mainMenu.GetComponent<MainMenu>().QuitToTitle();
+			mainMenu.QuitToTitle();
 		}
 
 		void Update() {

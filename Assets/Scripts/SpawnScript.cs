@@ -32,6 +32,9 @@ namespace FrenzyGames.FruitGame {
 		// prevent npe on the first restart. http://stackoverflow.com/a/340618
 		public event RestartHandler RestartEvent = delegate {};
 		public delegate void RestartHandler();
+		
+		public event GameOverHandler GameOverEvent = delegate {};
+		public delegate void GameOverHandler(Score score);
 
 		// Called at the startup of the app
 		void Start() {
@@ -44,6 +47,10 @@ namespace FrenzyGames.FruitGame {
 
 			//SpawnPoint = GameObject.Find("SpawnPoint").transform;
 			Floor = GameObject.Find("Floor").transform;
+
+			GameOverEvent += (Score score) => {
+				ClearBoard();
+			};
 		}
 
 		public void Restart() {
@@ -56,6 +63,9 @@ namespace FrenzyGames.FruitGame {
 			foreach (Transform fruit in IterateFruit()) {
 				DestroyObject(fruit.gameObject);
 			}
+		}
+		public void ForceGameOver(Score score) {
+			GameOverEvent(score);
 		}
 		void SpawnFruitStartup() {
 			// 2D array (effectively) - i used to have a specific array defined, which we may have to bring back

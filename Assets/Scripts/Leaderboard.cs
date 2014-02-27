@@ -12,6 +12,7 @@ namespace FrenzyGames.FruitGame {
 		// This should match /Assets/Resources/LocalSocialSetting (until we get network highscores)
 		public string leaderboardID;
 		public Pause pause;
+		public SpawnScript spawn;
 		public GameObject achievementPopupPrefab;
 		public AudioClip sfx;
 		
@@ -53,7 +54,7 @@ namespace FrenzyGames.FruitGame {
 				}
 			});
 			
-			pause.GameOverEvent += OnGameOver;
+			spawn.GameOverEvent += OnGameOver;
 		}
 
 		private int PrefsAddInt(string key, int val) {
