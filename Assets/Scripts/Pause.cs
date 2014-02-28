@@ -13,23 +13,21 @@ namespace FrenzyGames.FruitGame {
 		public MainMenu mainMenu;
 		public SpawnScript spawn;
 		public Score score;
+		public UnityEngine.GUISkin skin;
 
 		private enum State {Unpaused, Paused, QuitDialog, GameOver};
 		private State state = State.Unpaused;
 
 		// http://docs.unity3d.com/Documentation/Components/GUIScriptingGuide.html
 		void OnGUI() {
+			GUI.skin = skin;
 			// http://answers.unity3d.com/questions/46158/how-to-create-a-transparent-button.html
 			Rect buttonRect = new Rect(0, 0, Screen.width * 0.07f, Screen.width * 0.07f);
-			GUI.skin.button.fontSize = 48;
-			GUI.skin.label.fontSize = 48;
 			// currently paused, hits the unpause button
 			if (state == State.Paused) {
-				GUI.backgroundColor = Color.clear;
-				if (GUI.Button(buttonRect, unpauseIcon)) {
+				if (GUI.Button(buttonRect, unpauseIcon, "label")) {
 					Unpause();
 				}
-				GUI.backgroundColor = Color.black;
 				GUILayout.BeginArea(new Rect(Screen.width * 0.3f, Screen.height * 0.3f, Screen.width * 0.4f, Screen.height * 0.4f));
 				if (GUILayout.Button("Unpause")) {
 					Unpause();
@@ -39,8 +37,7 @@ namespace FrenzyGames.FruitGame {
 					audio.PlayOneShot(unpauseSound);
 				}
 				if (Debug.isDebugBuild) {
-					GUI.backgroundColor = GUI.color = Color.red;
-					if (GUILayout.Button("Force Game Over")) {
+					if (GUILayout.Button("Force Game Over", "debugButton")) {
 						state = State.GameOver;
 						spawn.ForceGameOver(score);
 						audio.PlayOneShot(gameOverSound);
@@ -51,13 +48,11 @@ namespace FrenzyGames.FruitGame {
 			}
 			// currently unpaused, hits the pause button
 			else if (state == State.Unpaused) {
-				GUI.backgroundColor = Color.clear;
-				if (GUI.Button(buttonRect, pauseIcon)) {
+				if (GUI.Button(buttonRect, pauseIcon, "label")) {
 					Pause_();
 				}
 			}
 			else if (state == State.QuitDialog) {
-				GUI.backgroundColor = Color.black;
 				GUILayout.BeginArea(new Rect(Screen.width * 0.3f, Screen.height * 0.3f, Screen.width * 0.4f, Screen.height * 0.4f));
 				if (GUILayout.Button("Oops, Don't Quit")) {
 					state = State.Paused;
@@ -70,8 +65,6 @@ namespace FrenzyGames.FruitGame {
 			}
 			else if (state == State.GameOver) {
 				// http://docs.unity3d.com/Documentation/ScriptReference/GUI.Window.html
-				GUI.backgroundColor = Color.black;
-				GUI.skin.window.fontSize = 48;
 				GUILayout.Window(0, new Rect(Screen.width * 0.3f, Screen.height * 0.3f, Screen.width * 0.4f, Screen.height * 0.4f), GameOverWindow, "Game Over!");
 			}
 			// else assert false
