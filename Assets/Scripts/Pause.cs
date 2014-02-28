@@ -13,7 +13,7 @@ namespace FrenzyGames.FruitGame {
 		public MainMenu mainMenu;
 		public SpawnScript spawn;
 		public Score score;
-		public UnityEngine.GUISkin skin;
+		public GUISkin skin;
 
 		private enum State {Unpaused, Paused, QuitDialog, GameOver};
 		private State state = State.Unpaused;

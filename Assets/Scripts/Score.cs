@@ -4,7 +4,7 @@ using System.Collections;
 namespace FrenzyGames.FruitGame {
 	public class Score : MonoBehaviour {
 		public int score { get; private set; }
-		public GUIStyle style;
+		public GUISkin skin;
 
 		void Start () {
 			score = 0;
@@ -31,7 +31,8 @@ namespace FrenzyGames.FruitGame {
 		}
 
 		public void OnGUI() {
-			GUI.Label (new Rect (Screen.width - 100,0,100,50), formattedScore, style);
+			GUI.skin = skin;
+			GUI.Label (new Rect (Screen.width - 100,0,100,50), formattedScore);
 		}
 	}
 }

@@ -10,7 +10,7 @@ namespace FrenzyGames.FruitGame {
 		public SpawnScript spawn;
 		public MainMenu mainMenu;
 		public AudioClip sfx;
-		public GUIStyle style;
+		public GUISkin skin;
 		public int maxScoresShown;
 
 		private enum State { Main, HighScoreList, AchievementsList };
@@ -84,6 +84,7 @@ namespace FrenzyGames.FruitGame {
 		}
 		
 		public void OnGUI() {
+			GUI.skin = skin;
 			// Never ever display any of this if the MainMenu, where state is currently tracked, thinks we're in the middle of the game.
 			// TODO: delete MainMenu and maintain this state here, once this becomes the real MainMenu.
 			if (mainMenu.gameState == MainMenu.GameState.MainMenu) {
@@ -120,7 +121,7 @@ namespace FrenzyGames.FruitGame {
 					}
 				}
 				else if (state == State.HighScoreList) {
-					GUILayout.Label("High Scores", style);
+					GUILayout.Label("High Scores");
 					scrollPosition = GUILayout.BeginScrollView(
 						scrollPosition, false, true, GUILayout.Width(Screen.width), GUILayout.Height(Screen.height * 0.7f));
 					GUILayout.Box(HighScoreText);
@@ -130,7 +131,7 @@ namespace FrenzyGames.FruitGame {
 					}
 				}
 				else if (state == State.AchievementsList) {
-					GUILayout.Label("Achievements", style);
+					GUILayout.Label("Achievements");
 					scrollPosition = GUILayout.BeginScrollView(
 						scrollPosition, false, true, GUILayout.Width(Screen.width), GUILayout.Height(Screen.height * 0.7f));
 					if (describedAchievements == null) {
