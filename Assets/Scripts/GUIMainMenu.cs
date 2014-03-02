@@ -86,8 +86,10 @@ namespace FrenzyGames.FruitGame {
 		public void OnGUI() {
 			GUI.skin = skin;
 			// Never ever display any of this if the MainMenu, where state is currently tracked, thinks we're in the middle of the game.
-			// TODO: delete MainMenu and maintain this state here, once this becomes the real MainMenu.
-			if (mainMenu.gameState == MainMenu.GameState.MainMenu) {
+			// TODO: delete MainMenu and maintain this state here, once this becomes the real MainMenu
+
+			if (mainMenu.gameState == MainMenu.GameState.MainMenu) 
+			{
 				if (state == State.Main) {
 					if (GUI.Button(new Rect(0, Screen.height * (1 - 0.12f), Screen.width * 0.4f, Screen.height * 0.12f), "High Scores")) {
 						audio.PlayOneShot(sfx);
@@ -98,6 +100,11 @@ namespace FrenzyGames.FruitGame {
 						});
 						// hack to break the "play" button while highscore gui is showing
 						Time.timeScale = 0;
+					}
+
+					if (GUI.Button(new Rect(0, Screen.height * (1 - 0.36f), Screen.width * 0.4f, Screen.height * 0.12f), "Exit")) {
+						Application.Quit(); 
+						Debug.Log ("check quit");
 					}
 					if (GUI.Button(new Rect(0, Screen.height * (1 - 0.24f), Screen.width * 0.4f, Screen.height * 0.12f), "Achievements")) {
 						audio.PlayOneShot(sfx);
@@ -132,6 +139,7 @@ namespace FrenzyGames.FruitGame {
 				}
 				else if (state == State.AchievementsList) {
 					GUILayout.Label("Achievements");
+					//GUI.Box (new Rect(0, 0, Screen.width, Screen.height));
 					scrollPosition = GUILayout.BeginScrollView(
 						scrollPosition, false, true, GUILayout.Width(Screen.width), GUILayout.Height(Screen.height * 0.7f));
 					if (describedAchievements == null) {
