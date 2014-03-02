@@ -9,7 +9,7 @@ PlayerSettings:
   targetDevice: 2
   targetGlesGraphics: 1
   targetResolution: 0
-  accelerometerFrequency: 60
+  accelerometerFrequency: 0
   companyName: n8twj
   productName: Fruit Frenzy
   defaultCursor: {fileID: 0}
@@ -110,7 +110,7 @@ PlayerSettings:
   m_BuildTargetIcons:
   - m_BuildTarget: 
     m_Icons:
-    - m_Icon: {fileID: 2800000, guid: 9b59ce9a19ace4f1eb15a1b75e9ad8fe, type: 3}
+    - m_Icon: {fileID: 2800000, guid: a218dca100d4e498b9f1f8312c2ccde6, type: 3}
       m_Size: 128
   m_BuildTargetBatching:
   - m_BuildTarget: iPhone
