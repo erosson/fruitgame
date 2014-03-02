@@ -28,9 +28,7 @@ namespace FrenzyGames.FruitGame {
 			get {
 				// This would be better internationalization, but it broke around the time we started using
 				// GUI skins and I'm not sure why.
-				var val = string.Format("{0:N0}", score);
-				Debug.Log (val);
-				return val;
+				return string.Format("{0:N0}", score);
 				//return string.Format("{0:N0}", score);
 			}
 		}
