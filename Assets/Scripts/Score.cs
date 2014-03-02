@@ -26,13 +26,18 @@ namespace FrenzyGames.FruitGame {
 
 		public string formattedScore {
 			get {
-				return string.Format("{0:n0}", score);
+				// This would be better internationalization, but it broke around the time we started using
+				// GUI skins and I'm not sure why.
+				var val = string.Format("{0:N0}", score);
+				Debug.Log (val);
+				return val;
+				//return string.Format("{0:N0}", score);
 			}
 		}
 
 		public void OnGUI() {
 			GUI.skin = skin;
-			GUI.Label (new Rect (Screen.width - 100,0,100,50), formattedScore);
+			GUI.Label(new Rect (Screen.width * 0.7f, 0f, Screen.width * 0.3f, 60f), formattedScore, "score");
 		}
 	}
 }
