@@ -27,7 +27,7 @@ namespace FrenzyGames.FruitGame {
 		// Publish an event when blocks are matched.
 		// http://www.codeproject.com/Articles/11541/The-Simplest-C-Events-Example-Imaginable
 		public event MatchHandler MatchEvent = delegate {};
-		public delegate void MatchHandler(int removed);
+		public delegate void MatchHandler(MatchData match);
 
 		// prevent npe on the first restart. http://stackoverflow.com/a/340618
 		public event RestartHandler RestartEvent = delegate {};
@@ -165,7 +165,7 @@ namespace FrenzyGames.FruitGame {
 						audio.PlayOneShot(match);
 						cScript.DestroyMatches();
 						// Publish an event when blocks are matched.
-						MatchEvent(matched);
+						MatchEvent(new MatchData(matched, hit.transform, x, y));
 					} 
 					else {
 						audio.PlayOneShot(noMatch);

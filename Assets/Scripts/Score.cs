@@ -15,8 +15,8 @@ namespace FrenzyGames.FruitGame {
 			spawn.RestartEvent += OnRestart;
 		}
 
-		private void OnMatch(int removed) {
-			int scoreDelta = (removed - 1) * 100;
+		private void OnMatch(MatchData match) {
+			int scoreDelta = (match.NumRemoved - 1) * 100;
 			score += scoreDelta;
 		}
 
