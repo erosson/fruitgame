@@ -17,7 +17,9 @@ namespace FrenzyGames.FruitGame {
 		}
 
 		private void OnMatch(MatchData match) {
-			int scoreDelta = (match.NumRemoved - 1) * 100;
+			// First fruit cleared awards no points. Beyond that, larger matches award more points per fruit cleared:
+			// 100 points per fruit in a 2-match (100*1); 110 per fruit in a 3-match (110*2), 120 per fruit in a 4-match (120*3), ...
+			int scoreDelta = (match.NumRemoved - 1) * (100 + 10*(match.NumRemoved-2));
 			score += scoreDelta;
 
 			var popup = Instantiate(popupPrefab) as GameObject;
