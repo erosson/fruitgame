@@ -5,6 +5,7 @@ namespace FrenzyGames.FruitGame {
 	public class Score : MonoBehaviour {
 		public int score { get; private set; }
 		public GUISkin skin;
+		public GameObject popupPrefab;
 
 		void Start () {
 			score = 0;
@@ -18,8 +19,15 @@ namespace FrenzyGames.FruitGame {
 		private void OnMatch(MatchData match) {
 			int scoreDelta = (match.NumRemoved - 1) * 100;
 			score += scoreDelta;
-		}
 
+			var popup = Instantiate(popupPrefab) as GameObject;
+			var data = popup.GetComponent<ScorePopup>();
+			data.PositionTouched = Camera.main.WorldToScreenPoint(match.Touched.position);
+			Debug.Log (match.Touched.localPosition + "; " + match.Touched.position);
+			data.Score = scoreDelta;
+			popup.SetActive(true);
+		}
+		
 		private void OnRestart() {
 			score = 0;
 		}

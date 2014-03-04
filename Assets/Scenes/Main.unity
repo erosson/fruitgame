@@ -628,6 +628,63 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_Size: {x: 1, y: 1}
   m_Center: {x: 0, y: 0}
+--- !u!1 &1109451940
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1109451943}
+  - 114: {fileID: 1109451942}
+  - 95: {fileID: 1109451941}
+  m_Layer: 0
+  m_Name: Score Popup
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!95 &1109451941
+Animator:
+  serializedVersion: 2
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1109451940}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 55ee0219ec930d24bba0e1d1a5d73437, type: 2}
+  m_CullingMode: 0
+  m_ApplyRootMotion: 0
+  m_AnimatePhysics: 0
+  m_HasTransformHierarchy: 1
+--- !u!114 &1109451942
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1109451940}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba26103046d537d4080a08025d04b02b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  YAnimate: 0
+  Skin: {fileID: 11400000, guid: b7eed9f4694396b4da66c3d62aa5d57f, type: 2}
+  PositionTouched: {x: 0, y: 0, z: 0}
+  Score: 0
+--- !u!4 &1109451943
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1109451940}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
 --- !u!1001 &1201848796
 Prefab:
   m_ObjectHideFlags: 0
@@ -2699,6 +2756,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skin: {fileID: 11400000, guid: b7eed9f4694396b4da66c3d62aa5d57f, type: 2}
+  popupPrefab: {fileID: 1109451940}
 --- !u!1 &1936914939
 GameObject:
   m_ObjectHideFlags: 0
@@ -2728,7 +2786,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   y: 0
-  skin: {fileID: 0}
+  skin: {fileID: 11400000, guid: b7eed9f4694396b4da66c3d62aa5d57f, type: 2}
 --- !u!4 &1936914942
 Transform:
   m_ObjectHideFlags: 0
