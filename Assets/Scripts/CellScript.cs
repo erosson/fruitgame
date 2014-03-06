@@ -11,6 +11,7 @@ using System.Collections.Generic;
 namespace FrenzyGames.FruitGame {
 	public class CellScript : MonoBehaviour {
 		public Transform CollectParticlesPrefab;
+		public AudioClip DropSfx;
 		
 		private GameObject SpawnPoint;
 		
@@ -21,6 +22,9 @@ namespace FrenzyGames.FruitGame {
 		// Update is called once per frame
 		void Update () {
 		
+		}
+		void OnCollisionEnter2D(Collision2D collision) { 
+			audio.PlayOneShot(DropSfx);
 		}
 		// callback functions - invoked by unity from the physics engine
 		// TODO sounds
