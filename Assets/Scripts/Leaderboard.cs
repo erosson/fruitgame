@@ -21,7 +21,7 @@ namespace FrenzyGames.FruitGame {
 		void Start() {
 			// Uncomment to reset local scores for debug builds.
 			if (Debug.isDebugBuild) {
-				PlayerPrefs.DeleteAll();
+				//PlayerPrefs.DeleteAll();
 			}
 
 			// Local achievements and leaderboards. TODO: use ios gamecenter, android googleplay, ...
@@ -55,6 +55,8 @@ namespace FrenzyGames.FruitGame {
 			});
 			
 			spawn.GameOverEvent += OnGameOver;
+
+			//throw new UnityException("test from android");
 		}
 
 		private int PrefsAddInt(string key, int val) {

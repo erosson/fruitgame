@@ -57,6 +57,8 @@ namespace FrenzyGames.FruitGame {
 			ClearBoard();
 			SpawnFruitStartup();
 			RestartEvent();
+			GA.API.Design.NewEvent("Game:Start");
+			GA_Queue.ForceSubmit();
 			// StartCoroutine(SpawnEvent());
 		}
 		public void ClearBoard() {
