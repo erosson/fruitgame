@@ -24,7 +24,7 @@ namespace FrenzyGames.FruitGame {
 		
 		}
 		void OnCollisionEnter2D(Collision2D collision) { 
-			audio.PlayOneShot(DropSfx);
+			//audio.PlayOneShot(DropSfx);
 		}
 		// callback functions - invoked by unity from the physics engine
 		// TODO sounds
