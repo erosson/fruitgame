@@ -55,8 +55,6 @@ namespace FrenzyGames.FruitGame {
 			});
 			
 			spawn.GameOverEvent += OnGameOver;
-
-			//throw new UnityException("test from android");
 		}
 
 		private int PrefsAddInt(string key, int val) {
